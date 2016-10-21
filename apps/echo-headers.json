@@ -1,0 +1,46 @@
+{
+  "id": "/echo-headers",
+  "cmd": null,
+  "cpus": 1,
+  "mem": 128,
+  "disk": 0,
+  "instances": 1,
+  "acceptedResourceRoles": [
+    "*"
+  ],
+  "container": {
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "brndnmtthws/nginx-echo-headers",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 0,
+          "servicePort": 10000,
+          "protocol": "tcp",
+          "labels": {}
+        }
+      ],
+      "privileged": false,
+      "parameters": [],
+      "forcePullImage": false
+    }
+  },
+  "labels": {
+    "heimdall.path": "/not-echo-headers",
+    "heimdall.options": "{\"forward_url\": \"http://localhost:8081/echo-headers\"}",
+    "heimdall.host": "localhost",
+    "heimdall.filters": "[\"Heimdall.Plug.AddApplicationHeader\", \"Bifrost.AddDBInfoHeader\"]",
+    "traefik.frontend.rule": "Path:/echo-headers"
+  },
+  "portDefinitions": [
+    {
+      "port": 10000,
+      "protocol": "tcp",
+      "labels": {}
+    }
+  ],
+  "args": []
+}

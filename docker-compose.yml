@@ -6,6 +6,8 @@ services:
     environment:
       ZK_CONFIG: tickTime=2000,initLimit=10,syncLimit=5,maxClientCnxns=128,forceSync=no,clientPort=2181
       ZK_ID: 1
+    extra_hosts:
+     - "$HOSTNAME:$DOCKER_LOCAL_IP"
 
   master:
     image: mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404
@@ -13,6 +15,8 @@ services:
      - zk
     ports:
      - "5050:5050"
+    extra_hosts:
+     - "$HOSTNAME:$DOCKER_LOCAL_IP"
     environment:
       MESOS_ZK: zk://zk:2181/mesos
       MESOS_PORT: 5050
@@ -21,10 +25,13 @@ services:
     depends_on:
       - zk
 
-  agent-one:
+  agent_one:
     image: mesosphere/mesos-slave:1.0.1-2.0.93.ubuntu1404
     links:
      - zk
+    hostname: "agent_one"
+    extra_hosts:
+     - "$HOSTNAME:$DOCKER_LOCAL_IP"
     environment:
       MESOS_MASTER: zk://zk:2181/mesos
       MESOS_CONTAINERIZERS: docker,mesos
@@ -39,18 +46,36 @@ services:
       - master
 
   marathon:
-    image: mesosphere/marathon:v1.3.0
+    image: mesosphere/marathon:v1.4.0-snap17
     links:
      - zk
     ports:
      - "8080:8080"
+    extra_hosts:
+     - "$HOSTNAME:$DOCKER_LOCAL_IP"
     environment:
       MARATHON_MASTER: zk://zk:2181/mesos
       MARATHON_ZK: zk://zk:2181/marathon
       MARATHON_EVENT_SUBSCRIBER: http_callback
     depends_on:
       - master
-      - agent-one
+      - agent_one
+
+  traefik:
+    image: traefik
+    links:
+     - marathon
+     - agent_one
+    extra_hosts:
+     - "$HOSTNAME:$DOCKER_LOCAL_IP"
+     - "agent_one:$DOCKER_LOCAL_IP"
+    ports:
+     - "8081:80"
+     - "8082:8080"
+    command: --web --marathon --marathon.endpoint="http://marathon:8080" --marathon.domain="localhost" --marathon.exposedByDefault="true" --marathon.watch="true"
+    depends_on:
+     - marathon
+     - agent_one
 
   # chronos:
   #   image: mesosphere/chronos:chronos-2.4.0-0.1.20151007110204.ubuntu1404-mesos-0.24.1-0.2.35.ubuntu1404
