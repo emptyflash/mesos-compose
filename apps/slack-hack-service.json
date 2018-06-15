@@ -1,0 +1,48 @@
+{
+    "id": "/slack-hack-service",
+    "cmd": null,
+    "cpus": 1,
+    "mem": 128,
+    "disk": 0,
+    "instances": 2,
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+            "image": "slack-hack-service:latest",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "hostPort": 0,
+                    "servicePort": 10012,
+                    "protocol": "tcp",
+                    "labels": {}
+                }
+            ],
+            "privileged": false,
+            "parameters": [],
+            "forcePullImage": false
+        }
+    },
+    "env": {
+        "SLACK_A_COOKIE": "37926958466%2C3971550362", 
+        "SLACK_A_TOKEN": "QtQ2I%2FotXDDDoHStIVgJV8CLUOPnD7x4bNnTdrayC1rqScWLbCzGB6ei51dqcUBmsDj2Db5Y%2Fyq8n7jz9A5jnQ%3D%3D",
+        "SLACK_APP_ID": "A39M85KPG"
+    },
+    "labels": {
+        "heimdall.host": "mesos.rs.corp.iofficecorp.com",
+        "heimdall.path": "/slack/v1/ensure-redirect",
+        "heimdall.options": "{\"forward_url\": \"http://$DOCKER_LOCAL_IP/slack-hack-service\"}",
+        "heimdall.filters": "[]",
+        "traefik.frontend.rule": "PathPrefixStrip: /slack-hack-service"
+    },
+    "healthChecks": [],
+    "portDefinitions": [
+        {
+            "port": 10012,
+            "protocol": "tcp",
+            "labels": {}
+        }
+    ]
+}

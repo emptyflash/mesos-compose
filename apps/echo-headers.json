@@ -29,10 +29,10 @@
     }
   },
   "labels": {
-    "heimdall.path": "/not-echo-headers",
+    "heimdall.path": "/echo-headers",
     "heimdall.options": "{\"forward_url\": \"http://localhost:8081/echo-headers\"}",
     "heimdall.host": "localhost",
-    "heimdall.filters": "[\"Heimdall.Plug.AddApplicationHeader\", \"Bifrost.AddDBInfoHeader\"]",
+    "heimdall.filters": "[\"Bifrost.AddDBInfoHeader\", \"Bifrost.AddAppInfoHeader\", \"Bifrost.AuthenticateRequest\"]",
     "traefik.frontend.rule": "Path:/echo-headers"
   },
   "portDefinitions": [

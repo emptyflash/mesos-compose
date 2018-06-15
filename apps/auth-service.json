@@ -1,0 +1,44 @@
+{
+    "id": "/auth-service",
+    "cmd": "target/universal/stage/bin/auth-service -Dplay.crypto.secret=thiskeyisridiculouslysecretlikedamn -Dhttp.port=8086",
+    "cpus": 1,
+    "mem": 512,
+    "disk": 0,
+    "instances": 1,
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+            "image": "iofficedocker/auth-service:latest",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 8086,
+                    "hostPort": 0,
+                    "servicePort": 10001,
+                    "protocol": "tcp",
+                    "labels": {}
+                }
+            ],
+            "privileged": false,
+            "parameters": [
+                { 
+                    "key": "--add-host", 
+                    "value": "mesos.rs.corp.iofficecorp.com:$DOCKER_LOCAL_IP" 
+                }
+            ],
+            "forcePullImage": false
+        }
+    },
+    "labels": {
+        "traefik.frontend.rule": "Path:/auth"
+    },
+    "healthChecks": [],
+    "portDefinitions": [
+        {
+            "port": 10001,
+            "protocol": "tcp",
+            "labels": {}
+        }
+    ]
+}

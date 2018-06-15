@@ -1,0 +1,31 @@
+{
+    "id": "/redis",
+    "cmd": null,
+    "cpus": 1,
+    "mem": 128,
+    "disk": 0,
+    "instances": 2,
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+            "image": "redis",
+            "network": "BRIDGE",
+            "portMappings": [
+            ],
+            "privileged": false,
+            "parameters": [],
+            "forcePullImage": true
+        }
+    },
+    "env": {
+    },
+    "healthChecks": [],
+    "portDefinitions": [
+        {
+            "port": 10014,
+            "protocol": "tcp",
+            "labels": {}
+        }
+    ]
+}

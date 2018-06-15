@@ -1,0 +1,54 @@
+{
+    "id": "/slack-service",
+    "cmd": null,
+    "cpus": 1,
+    "mem": 128,
+    "disk": 0,
+    "instances": 2,
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+            "image": "slack-service:latest",
+            "network": "HOST",
+            "portMappings": [
+                {
+                    "port": 0,
+                    "protocol": "tcp",
+                    "name": "server port"
+                },
+                {
+                    "port": 0,
+                    "protocol": "tcp",
+                    "name": "akka port"
+                }
+            ],
+            "privileged": false,
+            "parameters": [],
+            "forcePullImage": false
+        }
+    },
+    "env": {
+        "API_AI_CLIENT_TOKEN": "bffde46da28f40e9aff0adb1d874340a",
+        "SLACK_CLIENT_SECRET": "9a432d4114f770a2d5aa8b75bd79b746", 
+        "SLACK_CLIENT_ID": "3790240535.111722189798",
+        "REDIS_HOST": "$DOCKER_LOCAL_IP",
+        "REDIS_PORT": "6379",
+        "JAVA_OPTS": "-Dconstructr.coordination.nodes.0=$DOCKER_LOCAL_IP:2181 -Dakka.remote.netty.tcp.port=$${?PORT1} -Dhttp-server.port=$${?PORT0} -Dakka.remote.netty.tcp.host=$DOCKER_LOCAL_IP"
+    },
+    "labels": {
+        "heimdall.host": "bifrost-service.localhost",
+        "heimdall.path": "/slack",
+        "heimdall.options": "{\"forward_url\": \"http://$DOCKER_LOCAL_IP/slack-service\"}",
+        "heimdall.filters": "[]",
+        "traefik.frontend.rule": "PathPrefixStrip: /slack-service"
+    },
+    "healthChecks": [],
+    "portDefinitions": [
+        {
+            "port": 10013,
+            "protocol": "tcp",
+            "labels": {}
+        }
+    ]
+}

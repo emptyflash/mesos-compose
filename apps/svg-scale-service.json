@@ -1,0 +1,46 @@
+{
+    "id": "/svg-scale-service",
+    "cmd": null,
+    "cpus": 1,
+    "mem": 768,
+    "disk": 0,
+    "instances": 2,
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+            "image": "mesos.rs.corp.iofficecorp.com:5000/svg-scale-service:latest",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 8085,
+                    "hostPort": 0,
+                    "servicePort": 10008,
+                    "protocol": "tcp",
+                    "labels": {}
+                }
+            ],
+            "privileged": false,
+            "parameters": [],
+            "forcePullImage": false
+        }
+    },
+    "labels": {
+        "heimdall.path": "/transform-svg",
+        "heimdall.options": "{\"forward_url\":\"http://localhost:8081/svg-scale-service/transform-svg\", \"receive_timeout\": 300000}",
+        "heimdall.host": "bifrost-service",
+        "heimdall.filters": "[]",
+        "traefik.frontend.rule": "PathPrefix:/svg-scale-service"
+    },
+    "portDefinitions": [
+        {
+            "port": 10008,
+            "protocol": "tcp",
+            "labels": {}
+        }
+    ],
+    "upgradeStrategy": {
+        "minimumHealthCapacity": 0.5,
+        "maximumOverCapacity": 1
+    }
+}
